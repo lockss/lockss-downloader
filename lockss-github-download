@@ -212,11 +212,11 @@ Parse_Command_Line()
   esac
 
   if [ -z "${GIT_PROJECT}" ] ; then
-    GIT_PROJECT="${DEFAULT_GIT_PROJECT}"
+    Set_Git_Project "${DEFAULT_GIT_PROJECT}"
   fi
   
   if [ -z "${DOWNLOAD_DIR}" ] ; then
-    DOWNLOAD_DIR="${HOME}/$(basename "${GIT_PROJECT}")-download"
+    Set_Download_Dir "${HOME}/$(basename "${GIT_PROJECT}")-download"
   fi
 }
 
