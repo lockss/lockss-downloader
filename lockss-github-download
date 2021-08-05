@@ -39,11 +39,7 @@ VERSION=1.0.0-dev
 # Program name
 #
 
-DEFAULT_0='lockss-github-download'
-_0="$(basename "${0}")"
-if [ "${_0}" != 'lockss-github-download' ] ; then
-  _0="${DEFAULT_0}"
-fi
+_0='lockss-github-download'
 
 #
 # Constants
@@ -106,7 +102,7 @@ Download_From_Github()
   esac
   ( case "${DOWNLOADER}" in
       curl) curl -sSfL "${_url}" ;;
-      wget) wget -qO - "${_url}" ;;
+      wget) wget -qO- "${_url}" ;;
       *) Fatal "unknown downloader: ${DOWNLOADER}" ;; # shouldn't happen
     esac \
       | case "${ARCHIVER}" in
@@ -144,8 +140,8 @@ Usage:
 Options:
 
   --download-dir=DIR, -download-dir DIR, -d DIR
-    Download into DIR (default: \$HOME/.\$Y where Y is derived from the Git
-    project reference https://github.com/X/Y)
+    Download into DIR (default: \$HOME/\$Y-download where Y is derived from the
+    Git project reference https://github.com/X/Y)
 
   --git-branch=BRA, -git-branch BRA, -b BRA
     Use Git branch BRA (default: ${DEFAULT_GIT_BRANCH})
@@ -156,7 +152,7 @@ Options:
   --git-project=PRO, -git-project PRO, -p PRO
     Use GitHub project PRO (default: ${DEFAULT_GIT_PROJECT});
     format: https://github.com/foo/bar, https://github.com/foo/bar.git,
-    git@github.com:foo/bar, git@github.com:foo/bar.git, foo/bar (GitHub implied) 
+    git@github.com:foo/bar, git@github.com:foo/bar.git, foo/bar (GitHub implied)
 
   --git-tag=TAG, -git-tag TAG, -t TAG
     Use Git tag TAG instead of a Git branch 
@@ -220,7 +216,7 @@ Parse_Command_Line()
   fi
   
   if [ -z "${DOWNLOAD_DIR}" ] ; then
-    DOWNLOAD_DIR="${HOME}/.$(basename "${GIT_PROJECT}")"
+    DOWNLOAD_DIR="${HOME}/$(basename "${GIT_PROJECT}")-download"
   fi
 }
 
