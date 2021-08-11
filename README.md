@@ -17,21 +17,20 @@ To invoke `lockss-github-download` on the fly:
 1.  Use `curl -sSfL` or `wget -qO-` to fetch <https://github.com/lockss/lockss-github-download/raw/main/lockss-github-download>, then pipe the result into `sh -s -` optionally followed by the desired options. For example:
 
     ```shell
-curl -sSfL https://github.com/lockss/lockss-github-download/raw/main/lockss-github-download | sh -s - --git-project=https://github.com/lockss/lockss-installer
+    curl -sSfL https://github.com/lockss/lockss-github-download/raw/main/lockss-github-download | sh -s - --git-project=https://github.com/lockss/lockss-installer
     ```
 
     or:
 
     ```shell
-wget -qO- https://github.com/lockss/lockss-github-download/raw/main/lockss-github-download | sh -s - --help
+    wget -qO- https://github.com/lockss/lockss-github-download/raw/main/lockss-github-download | sh -s - --help
     ```
 
 ### From a Downloaded Copy
 
 To invoke a downloaded copy of `lockss-github-download`:
 
-1.  Use `curl -Lo lockss-github-download` or `wget` to fetch 
-<https://github.com/lockss/lockss-github-download/raw/main/lockss-github-download>.
+1.  Use `curl -Lo lockss-github-download` or `wget` to fetch <https://github.com/lockss/lockss-github-download/raw/main/lockss-github-download>.
 
 2.  Inspect `lockss-github-download` to your satisfaction.
 
@@ -40,13 +39,13 @@ To invoke a downloaded copy of `lockss-github-download`:
 4.  Run `./lockss-github-download` optionally followed by the desired options. For example:
 
     ```shell
-./lockss-github-download --git-project=https://github.com/lockss/lockss-installer
+    ./lockss-github-download --git-project=https://github.com/lockss/lockss-installer
     ```
 
     or:
 
     ```shell
-./lockss-github-download --help
+    ./lockss-github-download --help
     ```
 
 ## Options
@@ -61,7 +60,7 @@ To invoke a downloaded copy of `lockss-github-download`:
 
     *   `git@github.com:foo/bar`
 
-    *    `git@github.com:foo/bar.git`
+    *   `git@github.com:foo/bar.git`
 
     *   `foo/bar` (GitHub implied)
 
