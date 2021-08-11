@@ -97,7 +97,7 @@ Download_From_Github()
     *) Fatal 'unknown Git reference' ;; # shouldn't happen
   esac
   case "${ARCHIVER}" in
-    tar) _url="${_url}.tar.gz" ;;
+    gtar|tar) _url="${_url}.tar.gz" ;;
     *) Fatal "unknown archiver: ${ARCHIVER}" ;; # shouldn't happen
   esac
   ( case "${DOWNLOADER}" in
@@ -106,7 +106,7 @@ Download_From_Github()
       *) Fatal "unknown downloader: ${DOWNLOADER}" ;; # shouldn't happen
     esac \
       | case "${ARCHIVER}" in
-          gtar|tar) $SUDO $ARCHIVER xzf - --directory="${DOWNLOAD_DIR}" --strip-components=1 ;;
+          gtar|tar) $SUDO "$ARCHIVER" xzf - --directory="${DOWNLOAD_DIR}" --strip-components=1 ;;
           *) Fatal "unknown archiver: ${ARCHIVER}" ;; # shouldn't happen ;;
         esac ) || Fatal "could not download and extract ${_url}"
 }
@@ -241,12 +241,16 @@ Rename_Previous_Dir()
 #
 Set_Archiver()
 {
-  for _a in gtar tar ; do
-    if command -v "${_a}" > /dev/null ; then
-      ARCHIVER="${_a}"
-      break
-    fi
-  done
+  if [ "$(uname -s)" = 'Darwin' ] && command -v gtar > /dev/null ; then
+    ARCHIVER='gtar'
+  else
+    for _a in tar ; do
+      if command -v "${_a}" > /dev/null ; then
+        ARCHIVER="${_a}"
+        break
+      fi
+    done
+  fi
   if [ -z "${ARCHIVER}" ] ; then
     Fatal 'tar (or gtar) must be installed and on the PATH'
   fi
