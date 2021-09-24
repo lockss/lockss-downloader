@@ -140,8 +140,8 @@ Usage:
 Options:
 
   --download-dir=DIR, -download-dir DIR, -d DIR
-    Download into DIR (default: \$HOME/\$Y-download where Y is derived from the
-    Git project reference https://github.com/X/Y)
+    Download into DIR (default: \$HOME/\$Y where Y is derived from the Git
+    project reference https://github.com/X/Y)
 
   --git-branch=BRA, -git-branch BRA, -b BRA
     Use Git branch BRA (default: ${DEFAULT_GIT_BRANCH})
@@ -216,7 +216,7 @@ Parse_Command_Line()
   fi
   
   if [ -z "${DOWNLOAD_DIR}" ] ; then
-    Set_Download_Dir "${HOME}/$(basename "${GIT_PROJECT}")-download"
+    Set_Download_Dir "${HOME}/$(basename "${GIT_PROJECT}")"
   fi
 }
 

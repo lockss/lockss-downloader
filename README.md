@@ -68,7 +68,7 @@ To create and use a local copy of the LOCKSS Downloader:
 
 *   By default, the LOCKSS Downloader downloads the `master` branch of the target project, but you can specify any branch with `--git-branch=${branch}`, or tag with `--git-tag=${tag}`, or commit with `--git-commit=${commit}`.
 
-*   By default, the LOCKSS Downloader downloads the target project <https://github.com/foo/bar> into `${HOME}/bar-download` (i.e. derived from the repository name by adding `-download`), but you can specify the target directory of your choice with `--download-dir=${dir}`.
+*   By default, the LOCKSS Downloader downloads the target project <https://github.com/foo/bar> into `${HOME}/bar` (i.e. derived from the repository name), but you can specify the target directory of your choice with `--download-dir=${dir}`.
 
 *   By default, the LOCKSS Downloader replaces the target directory wholesale, but you can request that it keep a backup copy of the existing download directory with `--keep-previous` by renaming to a name with a unique suffix.
 
@@ -82,4 +82,4 @@ The URL <https://github.com/lockss/lockss-downloader/raw/main/lockss-downloader>
 
 *   For a given tag of the `lockss-downloader` Git repository, use <https://github.com/lockss/lockss-downloader/raw/${tag}/lockss-downloader>, for example <https://github.com/lockss/lockss-downloader/raw/version-1.2.0/lockss-downloader> for the tag `version-1.2.0`. See <https://github.com/lockss/lockss-downloader/tags>.
 
-*   For a given commit of the `lockss-downloader` Git repository, use <https://github.com/lockss/lockss-downloader/raw/${commit}/lockss-downloader>, for example <https://github.com/lockss/lockss-github-download/raw/ec60067fdcdbee6148e139c77ce92d43aba75637/lockss-downloader> for commit `ec60067fdcdbee6148e139c77ce92d43aba75637`. See <https://github.com/lockss/lockss-downloader/commits>.
+*   For a given commit of the `lockss-downloader` Git repository, use <https://github.com/lockss/lockss-downloader/raw/${commit}/lockss-downloader>, for example <https://github.com/lockss/lockss-github-download/raw/c8760ff347ce9cd3ed483e8bceb3ab7783ef274a/lockss-downloader> for commit `c8760ff347ce9cd3ed483e8bceb3ab7783ef274a`. See <https://github.com/lockss/lockss-downloader/commits>.
