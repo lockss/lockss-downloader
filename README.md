@@ -1,8 +1,10 @@
-# `lockss-github-download`
+# `lockss-downloader`
+
+The LOCKSS Downloader is a script to download GitHub projects (by default the LOCKSS Installer) with `curl` or `wget`.
 
 ## Prerequisites
 
-`lockss-github-download` requires:
+The LOCKSS Downloader requires:
 
 *   `curl` or `wget`
 
@@ -12,47 +14,47 @@
 
 ### On the Fly
 
-To invoke `lockss-github-download` on the fly:
+To invoke the LOCKSS Downloader on the fly:
 
-1.  Use `curl -sSfL` or `wget -qO-` to fetch <https://github.com/lockss/lockss-github-download/raw/main/lockss-github-download>, then pipe the result into `sh -s -` optionally followed by the desired options. For example:
+1.  Use `curl -sSfL` or `wget -qO-` to fetch <https://github.com/lockss/lockss-downloader/raw/main/lockss-downloader>, then pipe the result into `sh -s -` optionally followed by the desired options. For example:
 
     ```shell
-    curl -sSfL https://github.com/lockss/lockss-github-download/raw/main/lockss-github-download | sh -s - --git-project=https://github.com/lockss/lockss-installer
+    curl -sSfL https://github.com/lockss/lockss-downloader/raw/main/lockss-downloader | sh -s - --git-project=https://github.com/lockss/lockss-installer
     ```
 
     or:
 
     ```shell
-    wget -qO- https://github.com/lockss/lockss-github-download/raw/main/lockss-github-download | sh -s - --help
+    wget -qO- https://github.com/lockss/lockss-downloader/raw/main/lockss-downloader | sh -s - --help
     ```
 
-### From a Downloaded Copy
+### From a Local Copy
 
-To invoke a downloaded copy of `lockss-github-download`:
+To create and use a local copy of the LOCKSS Downloader:
 
-1.  Use `curl -Lo lockss-github-download` or `wget` to fetch <https://github.com/lockss/lockss-github-download/raw/main/lockss-github-download>.
+1.  Use `curl -Lo lockss-downloader` or `wget` to fetch <https://github.com/lockss/lockss-downloader/raw/main/lockss-downloader>.
 
-2.  Inspect `lockss-github-download` to your satisfaction.
+2.  Inspect `lockss-downloader` to your satisfaction.
 
-3.  Run `chmod +x lockss-github-download` to make `lockss-github-download` executable.
+3.  Run `chmod +x lockss-downloader` to make `lockss-downloader` executable.
 
-4.  Run `./lockss-github-download` optionally followed by the desired options. For example:
+4.  Run `./lockss-downloader` optionally followed by the desired options. For example:
 
     ```shell
-    ./lockss-github-download --git-project=https://github.com/lockss/lockss-installer
+    ./lockss-downloader --git-project=https://github.com/lockss/lockss-installer
     ```
 
     or:
 
     ```shell
-    ./lockss-github-download --help
+    ./lockss-downloader --help
     ```
 
 ## Options
 
-*   For a list of all supported options, invoke `lockss-github-download` with `--help`.
+*   For a list of all supported options, invoke `lockss-downloader` with `--help`.
 
-*   By default, `lockss-github-download` downloads <https://github.com/lockss/lockss-installer>, but you can specify any GitHub project with `--git-project=${project}`, where `${project}` is in one of the following equivalent styles:
+*   **By default, the LOCKSS Downloader downloads the [LOCKSS Installer](https://github.com/lockss/lockss-installer)**, but you can specify any GitHub project with `--git-project=${project}`, where `${project}` is in one of the following equivalent styles:
 
     *   `https://github.com/foo/bar`
 
@@ -64,20 +66,20 @@ To invoke a downloaded copy of `lockss-github-download`:
 
     *   `foo/bar` (GitHub implied)
 
-*   By default, `lockss-github-download` downloads the `master` branch of the target project, but you can specify any branch with `--git-branch=${branch}`, or tag with `--git-tag=${tag}`, or commit with `--git-commit=${commit}`.
+*   By default, the LOCKSS Downloader downloads the `master` branch of the target project, but you can specify any branch with `--git-branch=${branch}`, or tag with `--git-tag=${tag}`, or commit with `--git-commit=${commit}`.
 
-*   By default, `lockss-github-download` downloads the target project <https://github.com/foo/bar> into `${HOME}/bar-download` (i.e. derived from the repository name by adding `-download`), but you can specify the target directory of your choice with `--download-dir=${dir}`.
+*   By default, the LOCKSS Downloader downloads the target project <https://github.com/foo/bar> into `${HOME}/bar` (i.e. derived from the repository name), but you can specify the target directory of your choice with `--download-dir=${dir}`.
 
-*   By default, `lockss-github-download` replaces the target directory wholesale, but you can request that it keep a backup copy of the existing download directory with `--keep-previous` by renaming to a name with a unique suffix.
+*   By default, the LOCKSS Downloader replaces the target directory wholesale, but you can request that it keep a backup copy of the existing download directory with `--keep-previous` by renaming to a name with a unique suffix.
 
-*   With `--version`, `lockss-github-download` displays its version number and exits.
+*   With `--version`, the LOCKSS Downloader displays its version number and exits.
 
 ## Running a Particular Version
 
-The URL <https://github.com/lockss/lockss-github-download/raw/main/lockss-github-download> corresponds to the latest stable  version of `lockss-github-download`, on the `main` branch of its Git repository <https://github.com/lockss/lockss-github-download>, but you can substitute a different URL:
+The URL <https://github.com/lockss/lockss-downloader/raw/main/lockss-downloader> corresponds to the latest stable version of the LOCKSS Downloader, on the `main` branch of its Git repository <https://github.com/lockss/lockss-github-download>, but you can substitute a different URL:
 
-*   For a given branch of the `lockss-github-download` Git repository, use <https://github.com/lockss/lockss-github-download/raw/${branch}/lockss-github-download>, for example <https://github.com/lockss/lockss-github-download/raw/develop/lockss-github-download> for the `develop` branch. See <https://github.com/lockss/lockss-github-download/branches>.
+*   For a given branch of the `lockss-downloader` Git repository, use <https://github.com/lockss/lockss-downloader/raw/${branch}/lockss-downloader>, for example <https://github.com/lockss/lockss-downloader/raw/develop/lockss-downloader> for the `develop` branch. See <https://github.com/lockss/lockss-downloader/branches>.
 
-*   For a given tag of the `lockss-github-download` Git repository, use <https://github.com/lockss/lockss-github-download/raw/${tag}/lockss-github-download>, for example <https://github.com/lockss/lockss-github-download/raw/version-1.0.0/lockss-github-download> for the tag `version-1.0.0`. See <https://github.com/lockss/lockss-github-download/tags>.
+*   For a given tag of the `lockss-downloader` Git repository, use <https://github.com/lockss/lockss-downloader/raw/${tag}/lockss-downloader>, for example <https://github.com/lockss/lockss-downloader/raw/version-1.2.0/lockss-downloader> for the tag `version-1.2.0`. See <https://github.com/lockss/lockss-downloader/tags>.
 
-*   For a given commit of the `lockss-github-download` Git repository, use <https://github.com/lockss/lockss-github-download/raw/${commit}/lockss-github-download>, for example <https://github.com/lockss/lockss-github-download/raw/ec60067fdcdbee6148e139c77ce92d43aba75637/lockss-github-download> for commit `ec60067fdcdbee6148e139c77ce92d43aba75637`. See <https://github.com/lockss/lockss-github-download/commits>.
+*   For a given commit of the `lockss-downloader` Git repository, use <https://github.com/lockss/lockss-downloader/raw/${commit}/lockss-downloader>, for example <https://github.com/lockss/lockss-github-download/raw/c8760ff347ce9cd3ed483e8bceb3ab7783ef274a/lockss-downloader> for commit `c8760ff347ce9cd3ed483e8bceb3ab7783ef274a`. See <https://github.com/lockss/lockss-downloader/commits>.
