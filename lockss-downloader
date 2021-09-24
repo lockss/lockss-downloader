@@ -39,7 +39,7 @@ VERSION='1.2.0-dev'
 # Program name
 #
 
-_0='lockss-github-download'
+_0='lockss-downloader'
 
 #
 # Constants
