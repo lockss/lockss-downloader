@@ -404,7 +404,6 @@ Parse_Command_Line "$@"
 Set_Sudo
 Set_Downloader
 Set_Archiver
-Rename_Previous_Dir
 Create_Download_Dir
 Download_From_Github
 Handle_Previous_Dir
