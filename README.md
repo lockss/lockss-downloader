@@ -70,8 +70,6 @@ To create and use a local copy of the LOCKSS Downloader:
 
 *   By default, the LOCKSS Downloader downloads the target project <https://github.com/foo/bar> into `${HOME}/bar` (i.e. derived from the repository name), but you can specify the target directory of your choice with `--download-dir=${dir}`.
 
-*   By default, the LOCKSS Downloader replaces the target directory wholesale, but you can request that it keep a backup copy of the existing download directory with `--keep-previous` by renaming to a name with a unique suffix.
-
 *   With `--version`, the LOCKSS Downloader displays its version number and exits.
 
 ## Running a Particular Version

@@ -33,7 +33,7 @@
 # Version
 #
 
-VERSION='1.2.0'
+VERSION='1.3.0'
 
 #
 # Program name
@@ -112,17 +112,6 @@ Download_From_Github()
 }
 
 #
-# Handle_Previous_Dir
-#
-Handle_Previous_Dir()
-{
-  if [ "${KEEP_PREVIOUS}" != 'true' ] && [ -d "${PREVIOUS_DIR}" ] ; then
-    $SUDO rm -rf "${PREVIOUS_DIR}" || Fatal "could not delete ${PREVIOUS_DIR}"
-    PREVIOUS_DIR=''
-  fi
-}
-
-#
 # Print_Help
 #
 Print_Help()
@@ -132,8 +121,8 @@ ${_0} version ${VERSION}
 
 Usage:
 
-  ${_0} [--git-project=PRO] [--download-dir=DIR] [--keep-previous]
-    [--git-branch=BRA|--git-commit=COM|--git-tag=TAG]
+  ${_0} [--git-project=PRO] [--download-dir=DIR] [--git-branch=BRA|
+      --git-commit=COM|--git-tag=TAG]
   ${_0} --help
   ${_0} --version
 
@@ -159,9 +148,6 @@ Options:
 
   --help, -help, -h
     Display this message and exit
-
-  --keep-previous, -keep-previous, -k
-    Keep a copy of the previous download, by renaming it with a timestamp
 
   --version, -version, -V
     Display this program's version number and exit
@@ -194,8 +180,6 @@ Parse_Command_Line()
 
       --help|-help|-h) Print_Help ; Graceful ;;
         
-      --keep-previous|-keep-previous|-k) KEEP_PREVIOUS='true' ; shift ;;
-
       --version|-version|-V) echo "${VERSION}" ; Graceful ;;
 
       -*) Fatal "Unknown option: ${1}" ;;
@@ -218,22 +202,6 @@ Parse_Command_Line()
   if [ -z "${DOWNLOAD_DIR}" ] ; then
     Set_Download_Dir "${HOME}/$(basename "${GIT_PROJECT}")"
   fi
-}
-
-#
-# Rename_Previous_Dir
-#
-Rename_Previous_Dir()
-{
-  if [ ! -e "${DOWNLOAD_DIR}" ] ; then
-    return
-  fi
-  _tmstp="$(date +%Y%m%d%H%M%S)"
-  while [ -e "${DOWNLOAD_DIR}.${_tmstp}" ] ; do
-    _tmstp="$(expr "${_tmstp}" + 1)"
-  done
-  $SUDO mv "${DOWNLOAD_DIR}" "${DOWNLOAD_DIR}.${_tmstp}" || Fatal "could not rename ${DOWNLOAD_DIR} to ${DOWNLOAD_DIR}.${_tmstp}"
-  PREVIOUS_DIR="${DOWNLOAD_DIR}.${_tmstp}"
 }
 
 #
@@ -392,7 +360,6 @@ GIT_BRANCH=''
 GIT_COMMIT=''
 GIT_PROJECT=''
 GIT_TAG=''
-KEEP_PREVIOUS=''
 PREVIOUS_DIR=''
 SUDO=''
 
@@ -404,8 +371,6 @@ Parse_Command_Line "$@"
 Set_Sudo
 Set_Downloader
 Set_Archiver
-Rename_Previous_Dir
 Create_Download_Dir
 Download_From_Github
-Handle_Previous_Dir
 Graceful
