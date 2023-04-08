@@ -1,7 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2000-2021, Board of Trustees of Leland Stanford Jr. University
-# All rights reserved.
+# Copyright (c) 2000-2023, Board of Trustees of Leland Stanford Jr. University
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -56,9 +55,6 @@ Fatal()
 {
   if [ -n "${1}" ] ; then
     echo "${_0}: error: ${1}" >&2
-    if [ -n "${PREVIOUS_DIR}" ] ; then
-      echo "Previously successful download retained in ${PREVIOUS_DIR}" >&2
-    fi
   fi
   exit 1
 }
@@ -72,6 +68,17 @@ Graceful()
 }
 
 #
+# Check_Root
+#
+Check_Root()
+{
+  if [ "$(id -u)" = '0' ] ; then
+    Fatal 'cannot be run as root'
+  fi
+}
+
+
+#
 # Create_Download_Dir
 #
 Create_Download_Dir()
@@ -82,7 +89,23 @@ Create_Download_Dir()
   if [ -e "${DOWNLOAD_DIR}" ] ; then
     Fatal "${DOWNLOAD_DIR} already exists but is not a directory"
   fi
-  $SUDO mkdir -p "${DOWNLOAD_DIR}" || Fatal "could not create ${DOWNLOAD_DIR}"
+  mkdir -p "${DOWNLOAD_DIR}" || Fatal "could not create ${DOWNLOAD_DIR}"
+}
+
+#
+# Display_Summary
+#
+Display_Summary()
+{
+  if [ "${QUIET}" != 'true' ] ; then
+    case "${GIT_BRANCH}${GIT_COMMIT}${GIT_TAG}" in
+      "${GIT_BRANCH}") _s="branch: ${GIT_BRANCH}" ;;
+      "${GIT_COMMIT}") _s="commit: ${GIT_COMMIT}" ;;
+      "${GIT_TAG}") _s="tag: ${GIT_TAG}" ;;
+      *) Fatal 'invalid Git state' ;; # shouldn't happen
+    esac
+    echo "https://github.com/${GIT_PROJECT} downloaded into ${DOWNLOAD_DIR} (${_s})"
+  fi
 }
 
 #
@@ -103,10 +126,11 @@ Download_From_Github()
   ( case "${DOWNLOADER}" in
       curl) curl -sSfL "${_url}" ;;
       wget) wget -qO- "${_url}" ;;
+      http) http -qd "${_url}" ;;
       *) Fatal "unknown downloader: ${DOWNLOADER}" ;; # shouldn't happen
     esac \
       | case "${ARCHIVER}" in
-          gtar|tar) $SUDO "$ARCHIVER" xzf - --directory="${DOWNLOAD_DIR}" --strip-components=1 ;;
+          gtar|tar) "$ARCHIVER" xzf - --directory="${DOWNLOAD_DIR}" --strip-components=1 ;;
           *) Fatal "unknown archiver: ${ARCHIVER}" ;; # shouldn't happen ;;
         esac ) || Fatal "could not download and extract ${_url}"
 }
@@ -121,36 +145,51 @@ ${_0} version ${VERSION}
 
 Usage:
 
-  ${_0} [--git-project=PRO] [--download-dir=DIR] [--git-branch=BRA|
-      --git-commit=COM|--git-tag=TAG]
-  ${_0} --help
+  ${_0} [--curl|--httpie|--wget] [--download-dir=DIR] [--git-branch=BRA|
+        --git-commit=COM|--git-tag=TAG] [--quiet] [PROJECT]
   ${_0} --version
+  ${_0} --help
+
+Argument:
+
+  PROJECT
+        GitHub project reference (default: ${DEFAULT_GIT_PROJECT};
+        format: https://github.com/X/Y or https://github.com/X/Y.git or
+        git@github.com:X/Y or git@github.com:X/Y.git or X/Y where GitHub is
+        implied)
 
 Options:
 
-  --download-dir=DIR, -download-dir DIR, -d DIR
-    Download into DIR (default: \$HOME/\$Y where Y is derived from the Git
-    project reference https://github.com/X/Y)
-
-  --git-branch=BRA, -git-branch BRA, -b BRA
-    Use Git branch BRA (default: ${DEFAULT_GIT_BRANCH})
-
-  --git-commit=COM, -git-commit COM, -c COM
-    Use Git commit COM instead of a Git branch
-
-  --git-project=PRO, -git-project PRO, -p PRO
-    Use GitHub project PRO (default: ${DEFAULT_GIT_PROJECT});
-    format: https://github.com/foo/bar, https://github.com/foo/bar.git,
-    git@github.com:foo/bar, git@github.com:foo/bar.git, foo/bar (GitHub implied)
-
-  --git-tag=TAG, -git-tag TAG, -t TAG
-    Use Git tag TAG instead of a Git branch 
-
   --help, -help, -h
-    Display this message and exit
+        display this message and exit
+  --quiet, -quiet, -q
+        produce no output unless an error occurs
+  --version, -version
+        display this program's version number and exit
 
-  --version, -version, -V
-    Display this program's version number and exit
+Git Tree Options:
+
+  --git-branch=BRA, --git-branch BRA, -git-branch BRA, -b BRA
+        use Git branch BRA (default: ${DEFAULT_GIT_BRANCH})
+  --git-commit=COM, --git-commit COM, -git-commit COM, -c COM
+        use Git commit COM instead of a Git branch
+  --git-tag=TAG, --git-tag TAG, -git-tag TAG, -t TAG
+        use Git tag TAG instead of a Git branch
+
+Directory Options:
+
+  --download-dir=DIR, --download-dir DIR, -download-dir DIR, -d DIR
+        download into DIR (default: \$HOME/\$Y where Y is derived from the
+        GitHub project reference https://github.com/X/Y)
+
+Fetch Options:
+
+  --curl, -curl, -C
+        force the use of Curl
+  --httpie, -httpie, -H
+        force the use of HTTPie
+  --wget, -wget, -W
+        force the use of Wget
 MyEOF
 }
 
@@ -163,45 +202,57 @@ Parse_Command_Line()
   while [ $# -gt 0 ] ; do
     case "${1}" in
 
+      --curl|-curl|-C) CURL='true' ; shift ;;
+
       --download-dir=*) Set_Download_Dir "${1#*=}" ; shift ;;
-      -download-dir|-d) Set_Download_Dir "${2}" ; shift ; shift ;;
+      --download-dir|-download-dir|-d) Set_Download_Dir "${2}" ; shift ; shift ;;
 
       --git-branch=*) Set_Git_Branch "${1#*=}" ; shift ;;
-      -git-branch|-b) Set_Git_Branch "${2}" ; shift ; shift ;;
+      --git-branch|-git-branch|-b) Set_Git_Branch "${2}" ; shift ; shift ;;
 
       --git-commit=*) Set_Git_Commit "${1#*=}" ; shift ;;
-      -git-commit|-c) Set_Git_Commit "${2}" ; shift ; shift ;;
-
-      --git-project=*) Set_Git_Project "${1#*=}" ; shift ;;
-      -git-project|-p) Set_Git_Project "${2}" ; shift ; shift ;;
+      --git-commit|-git-commit|-c) Set_Git_Commit "${2}" ; shift ; shift ;;
 
       --git-tag=*) Set_Git_Tag "${1#*=}" ; shift ;;
-      -git-tag|-t) Set_Git_Tag "${2}" ; shift ; shift ;;
+      --git-tag|-git-tag|-t) Set_Git_Tag "${2}" ; shift ; shift ;;
 
       --help|-help|-h) Print_Help ; Graceful ;;
         
-      --version|-version|-V) echo "${VERSION}" ; Graceful ;;
+      --httpie|-httpie|-H) HTTPIE='true' ; shift ;;
 
-      -*) Fatal "Unknown option: ${1}" ;;
+      --quiet|-quiet|-q) QUIET='true' ; shift ;;
 
-      *) Fatal "Unexpected argument: ${1:-empty string}" ;;
+      --version|-version) echo "${VERSION}" ; Graceful ;;
+
+      --wget|-wget|-W) WGET='true' ; shift ;;
+
+      -*) Fatal "unknown option: ${1}" ;;
+
+      *) Set_Git_Project "${1}" ; shift ;;
 
     esac
   done
   
+  case "${CURL}${HTTPIE}${WGET}" in
+    ''|"${CURL}"|"${HTTPIE}"|"${WGET}") ;;
+    *) Fatal 'at most one of --curl, --httpie, --wget can be used' ;;
+  esac
+
   case "${GIT_BRANCH}${GIT_COMMIT}${GIT_TAG}" in
     '') GIT_BRANCH="${DEFAULT_GIT_BRANCH}" ;;
     "${GIT_BRANCH}"|"${GIT_COMMIT}"|"${GIT_TAG}") ;;
-    *) Fatal '--git-branch, --git-commit, --git-tag: at most one can be used' ;;
+    *) Fatal 'at most one of --git-branch, --git-commit, --git-tag can be used' ;;
   esac
 
+  # Must be before DOWNLOAD_DIR section
   if [ -z "${GIT_PROJECT}" ] ; then
     Set_Git_Project "${DEFAULT_GIT_PROJECT}"
   fi
-  
+
   if [ -z "${DOWNLOAD_DIR}" ] ; then
     Set_Download_Dir "${HOME}/$(basename "${GIT_PROJECT}")"
   fi
+
 }
 
 #
@@ -211,16 +262,11 @@ Set_Archiver()
 {
   if [ "$(uname -s)" = 'Darwin' ] && command -v gtar > /dev/null ; then
     ARCHIVER='gtar'
-  else
-    for _a in tar ; do
-      if command -v "${_a}" > /dev/null ; then
-        ARCHIVER="${_a}"
-        break
-      fi
-    done
+  elif command -v tar > /dev/null ; then
+    ARCHIVER='tar'
   fi
   if [ -z "${ARCHIVER}" ] ; then
-    Fatal 'tar (or gtar) must be installed and on the PATH'
+    Fatal 'no tar (or gtar) on the PATH'
   fi
 }
 
@@ -242,18 +288,47 @@ Set_Download_Dir()
 
 #
 # Set_Downloader
+# $1: executable
 #
 Set_Downloader()
 {
-  for _d in curl wget ; do
-    if command -v "${_d}" > /dev/null ; then
-      DOWNLOADER="${_d}"
-      break
-    fi
-  done
-  if [ -z "${DOWNLOADER}" ] ; then
-    Fatal 'curl or wget must be installed and on the PATH'
-  fi
+  case "${CURL}${HTTPIE}${WGET}" in
+    '')
+      for _d in curl wget http ; do
+        if command -v "${_d}" > /dev/null ; then
+          DOWNLOADER="${_d}"
+          break
+        fi
+      done
+      if [ -z "${DOWNLOADER}" ] ; then
+        Fatal 'at least one of curl, wget, http must be on the PATH'
+      fi
+      ;;
+    "${CURL}")
+      if command -v curl > /dev/null ; then
+        DOWNLOADER='curl'
+      else
+        Fatal '--curl: curl must be on the PATH'
+      fi
+      ;;
+    "${HTTPIE}")
+      if command -v http > /dev/null ; then
+        DOWNLOADER='http'
+      else
+        Fatal '--httpie: http must be on the PATH'
+      fi
+      ;;
+    "${WGET}")
+      if command -v wget > /dev/null ; then
+        DOWNLOADER='wget'
+      else
+        Fatal '--wget: wget must be on the PATH'
+      fi
+      ;;
+    *)
+      Fatal 'invalid downloader'
+      ;; # shouldn't happen
+  esac
 }
 
 #
@@ -290,26 +365,26 @@ Set_Git_Commit()
 
 #
 # Set_Git_Project
-# $1: project reference (foo/bar, https://github.com/foo/bar, https://github.com/foo/bar.git, git@github.com:foo/bar)
+# $1: project reference (foo/bar, https://github.com/foo/bar, https://github.com/foo/bar.git, git@github.com:foo/bar, git@github.com:foo/bar.git)
 #
 Set_Git_Project()
 {
   if [ -z "${1}" ] ; then
-    Fatal '--git-project: empty project reference'
+    Fatal 'empty project reference'
   fi
   case "${1}" in
     https://github.com/*/*) _proj="${1%.git}" ; _proj="${_proj#https://github.com/}" ;;
     git@github.com:*/*) _proj="${1%.git}" ; _proj="${_proj#git@github.com:}" ;;
     */*) _proj="${1}" ;;
-    *) Fatal "--git-project: ${1} is not a valid project reference" ;;
+    *) Fatal "invalid project reference: ${1}" ;;
   esac
   if [ "${_proj%/*}/${_proj#*/}" != "${_proj}" ] ; then
-    Fatal "--git-project: ${1} is not a valid project reference"
+    Fatal "invalid project reference: ${1}"
   fi
   if [ -z "${GIT_PROJECT}" ] ; then
     GIT_PROJECT="${_proj}"
   elif [ "${_proj}" != "${GIT_PROJECT}" ] ; then
-    Fatal "--git-project: ${_proj} conflicts with ${GIT_PROJECT}"
+    Fatal "${_proj} conflicts with ${GIT_PROJECT}"
   fi
 }
 
@@ -330,47 +405,30 @@ Set_Git_Tag()
 }
 
 #
-# Set_Sudo
-#
-Set_Sudo()
-{
-  SUDO=''
-  return
-#  if ! command -v id > /dev/null ; then
-#    Fatal 'id must be installed and on the PATH'
-#  fi
-#  if [ "$(id -u)" = '0' ] ; then
-#    SUDO=''
-#  else
-#    if ! command -v sudo > /dev/null ; then
-#      Fatal 'sudo must be installed and on the PATH' 
-#    fi
-#    SUDO='sudo'
-#  fi
-}
-
-#
 # Variables
 #
 
 ARCHIVER=''
+CURL=''
 DOWNLOAD_DIR=''
 DOWNLOADER=''
 GIT_BRANCH=''
 GIT_COMMIT=''
 GIT_PROJECT=''
 GIT_TAG=''
-PREVIOUS_DIR=''
-SUDO=''
+HTTPIE=''
+QUIET=''
+WGET=''
 
 #
 # Main
 #
 
 Parse_Command_Line "$@"
-Set_Sudo
+Check_Root
 Set_Downloader
 Set_Archiver
 Create_Download_Dir
 Download_From_Github
+Display_Summary
 Graceful
