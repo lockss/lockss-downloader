@@ -6,7 +6,7 @@ Release Notes
 1.4.0
 -----
 
-Released: unreleased
+Released: 2023-04-18
 
 *  **Features**
 
