@@ -3,7 +3,7 @@ Release Notes
 =============
 
 -----
-0.4.0
+1.4.0
 -----
 
 Released: unreleased

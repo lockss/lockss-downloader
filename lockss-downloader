@@ -32,7 +32,7 @@
 # Version
 #
 
-VERSION='1.4.0-SNAPSHOT'
+VERSION='1.4.0-dev'
 
 #
 # Program name
