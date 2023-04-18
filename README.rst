@@ -2,7 +2,7 @@
 LOCKSS Downloader
 =================
 
-.. |RELEASE| replace:: 1.4.0-dev
+.. |RELEASE| replace:: 1.5.0-dev
 .. |RELEASE_DATE| replace:: ?
 
 .. |CURL| replace:: ``--curl/-curl/-C``
