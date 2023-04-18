@@ -179,7 +179,7 @@ Git Tree Options:
 Directory Options:
 
   --download-dir=DIR, --download-dir DIR, -download-dir DIR, -d DIR
-        download into DIR (default: \$HOME/\$Y where Y is derived from the
+        download into DIR (default: \$HOME/<Y> where <Y> is derived from the
         GitHub project reference https://github.com/X/Y)
 
 Fetch Options:

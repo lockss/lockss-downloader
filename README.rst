@@ -203,7 +203,7 @@ By default, the LOCKSS Downloader downloads the head of the ``master`` branch of
 Directory Options
 =================
 
-By default, the LOCKSS Downloader downloads the target project ``https://github.com/X/Y`` into ``${HOME}/<Y>``, that is, a directory in the user's home directory whose name is derived from the Git repository name ``<Y>``). To specify your own destination directory, use the |DOWNLOAD_DIR| option.
+By default, the LOCKSS Downloader downloads the target project ``https://github.com/X/Y`` into ``${HOME}/<Y>``, that is, a directory in the user's home directory whose name is derived from the Git repository name ``<Y>``. To specify your own destination directory, use the |DOWNLOAD_DIR| option.
 
 Fetch Options
 =============
