@@ -1,1 +1,6 @@
+# IntelliJ/PyCharm artifacts
+/.idea/
+
+# Eclipse artifacts
 /.project
+
