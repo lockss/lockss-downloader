@@ -5,7 +5,7 @@ LOCKSS Downloader
 .. |RELEASE| replace:: 0.4.0-dev
 .. |RELEASE_DATE| replace:: ?
 
-.. |CURL| replace:: ``--curl/-curl/-C``.. |RELEASE| replace:: 0.4.0-dev
+.. |CURL| replace:: ``--curl/-curl/-C``
 .. |DOWNLOAD_DIR| replace:: ``--download-dir/-download-dir/-d``
 .. |GIT_BRANCH| replace:: ``--git-branch/-git-branch/-b``
 .. |GIT_COMMIT| replace:: ``--git-commit/-git-commit/-c``
@@ -18,7 +18,7 @@ LOCKSS Downloader
 
 The LOCKSS Downloader is a script to download GitHub projects without Git, with Curl, Wget or HTTPie instead.
 
-Invoke the LOCKSS Downloader, either `On the Fly`_ or `From a Local Copy`_, with a `GitHub Project Reference`_, and one or more `Options`_ if needed.
+Invoke the LOCKSS Downloader, either `On the Fly`_ or `From a Local Copy`_, with a `GitHub Project Reference`_ (`Options`_ if needed), and the project will be downloaded from GitHub (by default into a directory in your home directory).
 
 If no `GitHub Project Reference`_ is specified, the LOCKSS Downloader downloads the `LOCKSS Installer <https://github.com/lockss/lockss-installer>`_, which is used to install and run the `LOCKSS 2.x system <https://docs.lockss.org/projects/manual>`_.
 
@@ -77,7 +77,7 @@ Usage
 On the Fly
 ==========
 
-In this mode of invocation, the LOCKSS Downloader script is fetched (with Curl, Wget or HTTPie) then immediately executed by the shell (with a `GitHub Project Reference`_ and one or more `Options`_ if needed), without being stored on the host system. At a high level, this looks like this::
+In this mode of invocation, the LOCKSS Downloader script is fetched (with Curl, Wget or HTTPie), then immediately executed by the shell (with a `GitHub Project Reference`_, and `Options`_ if needed), without being stored on the host system::
 
     fetch_the_source_code | sh -s - [OPTIONS...] [PROJECT]
 
@@ -93,7 +93,7 @@ To invoke the LOCKSS Downloader in this mode, fetch https://github.com/lockss/lo
 From a Local Copy
 =================
 
-In this mode of invocation, you first download the LOCKSS Downloader script to the host system, then inspect it to your satisfaction before running it yourself (with a `GitHub Project Reference`_ and one or more `Options`_ if needed).
+In this mode of invocation, you first download the LOCKSS Downloader script to the host system, then inspect it to your satisfaction, then run it yourself (with a `GitHub Project Reference`_, and `Options`_ if needed).
 
 To invoke the LOCKSS Downloader in this mode:
 
@@ -189,7 +189,7 @@ Otherwise, the given GitHub project is downloaded, as specified in one of the fo
 
 *  ``git@github.com:foo/bar.git``
 
-*  ``foo/bar`` with GitHub implied, corresponding to ``https://github.com/foo/bar``
+*  ``foo/bar`` (with GitHub implied, corresponding to ``https://github.com/foo/bar``)
 
 Git Tree Options
 ================
@@ -229,7 +229,7 @@ The URL https://github.com/lockss/lockss-downloader/raw/main/lockss-downloader c
 
 You can use a different version of the LOCKSS Downloader by modifying the URL:
 
-*  For a given branch of the `lockss-downloader` Git repository, use ``https://github.com/lockss/lockss-downloader/raw/<branch>/lockss-downloader``, for example ``https://github.com/lockss/lockss-downloader/raw/develop/lockss-downloader`` for the ``develop`` branch. See https://github.com/lockss/lockss-downloader/branches.
+*  For a given branch of the ``lockss-downloader`` Git repository, use ``https://github.com/lockss/lockss-downloader/raw/<branch>/lockss-downloader``, for example ``https://github.com/lockss/lockss-downloader/raw/develop/lockss-downloader`` for the ``develop`` branch. See https://github.com/lockss/lockss-downloader/branches.
 
 *  For a given tag of the ``lockss-downloader`` Git repository, use ``https://github.com/lockss/lockss-downloader/raw/<tag>/lockss-downloader``, for example ``https://github.com/lockss/lockss-downloader/raw/version-1.2.0/lockss-downloader`` for the tag ``version-1.2.0``. See https://github.com/lockss/lockss-downloader/tags.
 
