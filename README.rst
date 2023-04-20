@@ -103,7 +103,7 @@ To invoke the LOCKSS Downloader in this mode:
     curl -Lo lockss-downloader https://github.com/lockss/lockss-downloader/raw/main/lockss-downloader
     # With Wget:
     wget -qO lockss-downloader https://github.com/lockss/lockss-downloader/raw/main/lockss-downloader
-    # With HTTPie
+    # With HTTPie:
     http -qdo lockss-downloader https://github.com/lockss/lockss-downloader/raw/main/lockss-downloader
 
    This will create the file ``lockss-downloader`` in the current directory.
