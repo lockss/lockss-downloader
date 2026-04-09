@@ -141,7 +141,7 @@ Download_From_Github()
 Make_Command_Line_Parser()
 {
   setup REST alt:TRUE help:Print_Help -- 'Usage:' \
-    "  ${_0} [--download-dir=DIR] [--branch=BRA|--commit=COM|--tag=TAG] [--curl|--httpie|--wget] [--quiet] [PROJECT]" \
+    "  ${_0} [--download-dir=DIR] [--branch=BRA|--commit=COM|--tag=TAG] [--curl|--wget] [--quiet] [PROJECT]" \
     "  ${_0} --version" \
     "  ${_0} --help" \
     '' \
@@ -157,9 +157,8 @@ Make_Command_Line_Parser()
   param :'Set_Git_Branch "${OPTARG}"' var:BRA --branch --git-branch -b -- 'Use the Git branch BRA (deprecated: --git-branch)'
   param :'Set_Git_Commit "${OPTARG}"' var:COM --commit --git-commit -c -- 'Use the Git commit COM (deprecated: --git-commit)'
   param :'Set_Git_Tag "${OPTARG}"' var:TAG --tag --git-tag -t -- 'Use the Git tag TAG (deprecated: --git-tag)'
-  msg -- '' 'Downloader options (default: Curl then Wget then HTTPie)'
+  msg -- '' 'Downloader options (default: Curl then Wget)'
   flag CURL --curl -C -- 'Force the use of Curl'
-  flag HTTPIE --httpie -H -- 'Force the use of HTTPie'
   flag WGET --wget -W -- 'Force the use of Wget'
   msg -- '' 'Other options'
   disp :Print_Help --help -h -- 'Display this help message and exit'
@@ -179,15 +178,15 @@ Parse_Command_Line_2()
     *) shift ; "too many arguments: $@" ;;
   esac
 
-  case "${CURL}${HTTPIE}${WGET}" in
-    ''|"${CURL}"|"${HTTPIE}"|"${WGET}") ;;
-    *) Fatal 'at most one of --curl, --httpie, --wget can be used' ;;
+  case "${CURL}${WGET}" in
+    ''|"${CURL}"|"${WGET}") ;;
+    *) Fatal 'at most one of --curl, --wget can be specified' ;;
   esac
 
   case "${GIT_BRANCH}${GIT_COMMIT}${GIT_TAG}" in
     '') GIT_BRANCH="${DEFAULT_GIT_BRANCH}" ;;
     "${GIT_BRANCH}"|"${GIT_COMMIT}"|"${GIT_TAG}") ;;
-    *) Fatal 'at most one of --branch, --commit, --tag can be used' ;;
+    *) Fatal 'at most one of --branch, --commit, --tag can be specified' ;;
   esac
 
   # Must be before DOWNLOAD_DIR section
@@ -238,16 +237,16 @@ Set_Download_Dir()
 #
 Set_Downloader()
 {
-  case "${CURL}${HTTPIE}${WGET}" in
+  case "${CURL}${WGET}" in
     '')
-      for _d in curl wget http ; do
+      for _d in curl wget ; do
         if command -v "${_d}" > /dev/null ; then
           DOWNLOADER="${_d}"
           break
         fi
       done
       if [ -z "${DOWNLOADER}" ] ; then
-        Fatal 'at least one of curl, wget, http must be on the PATH'
+        Fatal 'at least one of curl, wget must be on the PATH'
       fi
       ;;
     "${CURL}")
@@ -255,13 +254,6 @@ Set_Downloader()
         DOWNLOADER='curl'
       else
         Fatal '--curl: curl must be on the PATH'
-      fi
-      ;;
-    "${HTTPIE}")
-      if command -v http > /dev/null ; then
-        DOWNLOADER='http'
-      else
-        Fatal '--httpie: http must be on the PATH'
       fi
       ;;
     "${WGET}")

@@ -12,6 +12,10 @@ Released: 2026-04-08
 
    *  CLI revamped with getoptions.
 
+*  **Changes**
+
+   *  HTTPie has been removed.
+
 -----
 1.4.0
 -----
