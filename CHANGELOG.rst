@@ -3,6 +3,14 @@ Release Notes
 =============
 
 -----
+1.6.0
+-----
+
+Released: NOT YET RELEASED
+
+*  **Features**
+
+-----
 1.5.0
 -----
 

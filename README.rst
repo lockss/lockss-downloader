@@ -2,8 +2,8 @@
 LOCKSS Downloader
 =================
 
-.. |RELEASE| replace:: 1.5.0-dev
-.. |RELEASE_DATE| replace:: ?
+.. |RELEASE| replace:: 1.6.0-dev
+.. |RELEASE_DATE| replace:: NOT YET RELEASED
 
 .. |CURL| replace:: ``--curl/-curl/-C``
 .. |DOWNLOAD_DIR| replace:: ``--download-dir/-download-dir/-d``
