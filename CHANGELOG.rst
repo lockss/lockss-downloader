@@ -3,6 +3,20 @@ Release Notes
 =============
 
 -----
+1.5.0
+-----
+
+Released: 2026-04-08
+
+*  **Features**
+
+   *  CLI revamped with getoptions.
+
+*  **Changes**
+
+   *  HTTPie has been removed.
+
+-----
 1.4.0
 -----
 
