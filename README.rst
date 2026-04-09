@@ -11,12 +11,11 @@ LOCKSS Downloader
 .. |GIT_COMMIT| replace:: ``--git-commit/-git-commit/-c``
 .. |GIT_TAG| replace:: ``--git-tag/-git-tag/-t``
 .. |HELP| replace:: ``--help/-help/-h``
-.. |HTTPIE| replace:: ``--httpie/-httpie/-H``
 .. |QUIET| replace:: ``--quiet/-quiet/-q``
 .. |VERSION| replace:: ``--version/-version``
 .. |WGET| replace:: ``--wget/-wget/-W``
 
-The LOCKSS Downloader is a script to download GitHub projects without Git, with Curl, Wget or HTTPie instead.
+The LOCKSS Downloader is a script to download GitHub projects without Git, with Curl or Wgetinstead.
 
 Invoke the LOCKSS Downloader, either `On the Fly`_ or `From a Local Copy`_, with a `GitHub Project Reference`_ (`Options`_ if needed), and the project will be downloaded from GitHub (by default into a directory in your home directory).
 
@@ -62,8 +61,6 @@ Prerequisites
 
    *  `Wget <https://www.gnu.org/software/wget>`_ (``wget``)
 
-   *  `HTTPie <https://httpie.io/>`_ (``http``)
-
 *  One of:
 
    *  ``tar``
@@ -77,7 +74,7 @@ Usage
 On the Fly
 ==========
 
-In this mode of invocation, the LOCKSS Downloader script is fetched (with Curl, Wget or HTTPie), then immediately executed by the shell (with a `GitHub Project Reference`_, and `Options`_ if needed), without being stored on the host system::
+In this mode of invocation, the LOCKSS Downloader script is fetched (with Curl or Wget), then immediately executed by the shell (with a `GitHub Project Reference`_, and `Options`_ if needed), without being stored on the host system::
 
     fetch_the_source_code | sh -s - [OPTIONS...] [PROJECT]
 
@@ -87,8 +84,6 @@ To invoke the LOCKSS Downloader in this mode, fetch https://github.com/lockss/lo
     curl -sSfL https://github.com/lockss/lockss-downloader/raw/main/lockss-downloader | sh -s - [OPTIONS...] [PROJECT]
     # With Wget:
     wget -qO- https://github.com/lockss/lockss-downloader/raw/main/lockss-downloader | sh -s - [OPTIONS...] [PROJECT]
-    # With HTTPie:
-    http -qd https://github.com/lockss/lockss-downloader/raw/main/lockss-downloader | sh -s - [OPTIONS...] [PROJECT]
 
 From a Local Copy
 =================
@@ -103,8 +98,6 @@ To invoke the LOCKSS Downloader in this mode:
     curl -Lo lockss-downloader https://github.com/lockss/lockss-downloader/raw/main/lockss-downloader
     # With Wget:
     wget -qO lockss-downloader https://github.com/lockss/lockss-downloader/raw/main/lockss-downloader
-    # With HTTPie:
-    http -qdo lockss-downloader https://github.com/lockss/lockss-downloader/raw/main/lockss-downloader
 
    This will create the file ``lockss-downloader`` in the current directory.
 
@@ -123,52 +116,37 @@ Synopsis
 You can see a detailed help message by invoking the LOCKSS Downloader (`On the Fly`_ or `From a Local Copy`_) with the |HELP| option::
 
     Usage:
-
-      lockss-downloader [--curl|--httpie|--wget] [--download-dir=DIR] [--git-branch=BRA|
-            --git-commit=COM|--git-tag=TAG] [--quiet] [PROJECT]
+      lockss-downloader [--download-dir=DIR] [--branch=BRA|--commit=COM|--tag=TAG] [--curl|--wget] [--quiet] [PROJECT]
       lockss-downloader --version
       lockss-downloader --help
+    
+    PROJECT argument format (default: https://github.com/lockss/lockss-installer)
+      https://github.com/<x>/<y>
+      https://github.com/<x>/<y>.git
+      git@github.com:<x>/<y>
+      git@github.com:<x>/<y>.git
+      <x>/<y> (GitHub implied)
+    
+    Directory options
+          --download-dir, -d DIR  Download into DIR (default: $HOME/<y> with <y> from PROJECT)
+    
+    Git options (default: master branch of PROJECT)
+          --branch, --git-branch, -b BRA 
+                                  Use the Git branch BRA (deprecated: --git-branch)
+          --commit, --git-commit, -c COM 
+                                  Use the Git commit COM (deprecated: --git-commit)
+          --tag, --git-tag, -t TAG 
+                                  Use the Git tag TAG (deprecated: --git-tag)
+    
+    Downloader options (default: Curl then Wget)
+          --curl, -C              Force the use of Curl
+          --wget, -W              Force the use of Wget
+    
+    Other options
+          --help, -h              Display this help message and exit
+          --quiet, -q             Produce no output unless an error occurs
+          --version               Display the version and exit
 
-    Argument:
-
-      PROJECT
-            GitHub project reference (default: https://github.com/lockss/lockss-installer;
-            format: https://github.com/X/Y or https://github.com/X/Y.git or
-            git@github.com:X/Y or git@github.com:X/Y.git or X/Y where GitHub is
-            implied)
-
-    Options:
-
-      --help, -help, -h
-            display this message and exit
-      --quiet, -quiet, -q
-            produce no output unless an error occurs
-      --version, -version
-            display this program's version number and exit
-
-    Git Tree Options:
-
-      --git-branch=BRA, --git-branch BRA, -git-branch BRA, -b BRA
-            use Git branch BRA (default: master)
-      --git-commit=COM, --git-commit COM, -git-commit COM, -c COM
-            use Git commit COM instead of a Git branch
-      --git-tag=TAG, --git-tag TAG, -git-tag TAG, -t TAG
-            use Git tag TAG instead of a Git branch
-
-    Directory Options:
-
-      --download-dir=DIR, --download-dir DIR, -download-dir DIR, -d DIR
-            download into DIR (default: $HOME/$Y where Y is derived from the
-            GitHub project reference https://github.com/X/Y)
-
-    Fetch Options:
-
-      --curl, -curl, -C
-            force the use of Curl
-      --httpie, -httpie, -H
-            force the use of HTTPie
-      --wget, -wget, -W
-            force the use of Wget
 
 -------
 Options
@@ -208,7 +186,7 @@ By default, the LOCKSS Downloader downloads the target project ``https://github.
 Fetch Options
 =============
 
-By default, the LOCKSS Downloader detects one of Curl (``curl``), Wget (``wget``) or HTTPie (``http``) on the host system to perform the download, in this order, but you can force the choice with the |CURL|, |WGET| or |HTTPIE| options, respectively.
+By default, the LOCKSS Downloader detects one of Curl (``curl``) or Wget (``wget``) on the host system to perform the download, in this order, but you can force the choice with the |CURL| or |WGET| options, respectively.
 
 Other Options
 =============
