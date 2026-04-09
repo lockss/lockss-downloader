@@ -6,9 +6,11 @@ Release Notes
 1.5.0
 -----
 
-Released: ?
+Released: 2026-04-08
 
 *  **Features**
+
+   *  CLI revamped with getoptions.
 
 -----
 1.4.0
